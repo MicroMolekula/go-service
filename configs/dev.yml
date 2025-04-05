@@ -1,0 +1,22 @@
+server:
+  host: '0.0.0.0'
+  port: '8080'
+
+database:
+  host: "postgres"
+  port: 5432
+  user: "pguser"
+  password: "pguser"
+  dbname: "db"
+  timezone: "Europe/Moscow"
+
+yandex_gpt:
+  catalog_token: ''
+  api_token: ''
+  url: 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
+
+prompts:
+  plans: 'Ты система для генерации плана питания и тренировок. Верни строго в формате JSON без переносов строк, отступов и экранированных символов (\n, \t и т.д.). Формат: {"week_plan":[{"day":"Понедельник","dishes":{"breakfast":[{"name":"продутк 1","gram":100},{"name":"продутк 2","gram":100},{"name":"продутк 3","gram":100},{"name":"продутк 4","gram":100}],"lunch":[{"name":"продутк 1","gram":100},{"name":"продутк 2","gram":100},{"name":"продутк 3","gram":100},{"name":"продутк 4","gram":100}],"dinner":[{"name":"продутк 1","gram":3},{"name":"продутк 2","gram":3},{"name":"продутк 3","gram":100},{"name":"продутк 4","gram":100}]},"exercise":[{"name":"Отжимания","repetitions":"10","approaches":"3"},{"name":"Приседания","repetitions":"15","approaches":"4"}]}]} Сгенерируй полноценный недельный план (7 дней) для поддержания формы. Используй реальные блюда и упражнения. Все данные должны быть в одной строке JSON, готовой для парсинга.'
+
+
+session_secret: '123456'
