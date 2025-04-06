@@ -22,7 +22,7 @@ func (s *GptService) QueryLite(systemPrompt string, userPrompt string) (*dto.Gpt
 	req, err := s.gptClient.NewRequest(
 		s.cfg.YandexGPT.ApiToken,
 		s.cfg.YandexGPT.CatalogToken,
-		0.4,
+		0.9,
 		200,
 		systemPrompt,
 		userPrompt,
@@ -43,7 +43,7 @@ func (s *GptService) Query(systemPrompt string, userPrompt string) (*dto.GptResu
 	req, err := s.gptClient.NewRequest(
 		s.cfg.YandexGPT.ApiToken,
 		s.cfg.YandexGPT.CatalogToken,
-		0.5,
+		0.9,
 		3000,
 		systemPrompt,
 		userPrompt,
