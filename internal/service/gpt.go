@@ -18,14 +18,36 @@ func NewGptService(cfg *config.Config) *GptService {
 	}
 }
 
+func (s *GptService) QueryLite(systemPrompt string, userPrompt string) (*dto.GptResult, error) {
+	req, err := s.gptClient.NewRequest(
+		s.cfg.YandexGPT.ApiToken,
+		s.cfg.YandexGPT.CatalogToken,
+		0.8,
+		200,
+		systemPrompt,
+		userPrompt,
+		true,
+	)
+	if err != nil {
+		return nil, err
+	}
+	var res = &dto.GptResponse{}
+	_, err = s.gptClient.Do(req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res.Result, nil
+}
+
 func (s *GptService) Query(systemPrompt string, userPrompt string) (*dto.GptResult, error) {
 	req, err := s.gptClient.NewRequest(
 		s.cfg.YandexGPT.ApiToken,
 		s.cfg.YandexGPT.CatalogToken,
-		0.4,
+		0.5,
 		3000,
 		systemPrompt,
 		userPrompt,
+		false,
 	)
 	if err != nil {
 		return nil, err

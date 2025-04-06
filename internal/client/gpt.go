@@ -18,12 +18,9 @@ type GPTClient struct {
 }
 
 func NewGPTClient(baseUrl string) *GPTClient {
-	tlsConfig := &tls.Config{
-		MinVersion: tls.VersionTLS12,
-	}
 	transport := &http.Transport{
 		TLSHandshakeTimeout: 2 * time.Minute,
-		TLSClientConfig:     tlsConfig,
+		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 	}
 	httpClient := &http.Client{Transport: transport, Timeout: 2 * time.Minute}
 	path, _ := url.Parse(baseUrl)
@@ -36,9 +33,14 @@ func (c *GPTClient) NewRequest(
 	temperature float64,
 	maxTokens int,
 	systemPrompt, userPrompt string,
+	isLite bool,
 ) (*http.Request, error) {
+	version := ""
+	if isLite {
+		version = "-lite"
+	}
 	body := &dto.GptRequest{
-		ModelUri: fmt.Sprintf("gpt://%s/yandexgpt/latest", catalogId),
+		ModelUri: fmt.Sprintf("gpt://%s/yandexgpt%s/latest", catalogId, version),
 		CompletionOptions: &dto.CompletionOptions{
 			Stream:      false,
 			Temperature: temperature,

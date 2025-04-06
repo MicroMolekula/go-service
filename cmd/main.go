@@ -27,10 +27,13 @@ func main() {
 	userPlanCollection := mongoClient.GetCollection("user_plans")
 	userPlanRepository := repository.NewUserPlanRepository(userPlanCollection)
 	userRepository := repository.NewUserRepository(db)
+	messageRepository := repository.NewMessageRepository(db)
 	gptService := service.NewGptService(cfg)
 	gptController := controller.NewGPTController(gptService)
 	fitnessService := service.NewFitnessService(gptService, cfg, userPlanRepository)
+	chatService := service.NewChatService(gptService, messageRepository)
 	fitnessController := controller.NewFitnessController(fitnessService)
+	chatController := controller.NewChatController(chatService)
 	userMiddleware := controller.NewUserMiddleware(userRepository)
 	engine := gin.Default()
 	engine.Use(userMiddleware.Middleware())
@@ -38,6 +41,8 @@ func main() {
 	engine.GET("/plan/generate", fitnessController.GetPlan)
 	engine.GET("/profile", userMiddleware.Profile)
 	engine.GET("/plan", fitnessController.FindPlanByUserId)
+	engine.POST("/chat/send", chatController.SendMessage)
+	engine.GET("/chat", chatController.GetMessages)
 
 	if err = engine.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatal(err)
