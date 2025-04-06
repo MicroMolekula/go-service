@@ -22,7 +22,7 @@ func (s *ChatService) SendMessage(message string, user *models.User) (*models.Me
 		Type:    false,
 		Context: message,
 	}
-	gptResp, err := s.gptService.QueryLite("Ты фитнес-тренер, способный помочь пользователю в вопросах по фитнесу. Общайся кратко и на простом языке. Отвечай только по теме.", message)
+	gptResp, err := s.gptService.QueryLite("Ты фитнес-тренер, способный помочь пользователю в вопросах по фитнесу. Общайся кратко и на простом языке. Отвечай только по теме фитнеса и спорта.", message)
 	if err != nil {
 		return nil, err
 	}
