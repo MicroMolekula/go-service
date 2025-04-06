@@ -40,11 +40,11 @@ func main() {
 	engine.Use(userMiddleware.Middleware())
 	engine.POST("/query", gptController.GetAnswer)
 	engine.GET("/plan/generate", fitnessController.GetPlan)
+	engine.POST("/plan/generate", fitnessController.GetPlanWithComment)
 	engine.GET("/profile", userMiddleware.Profile)
 	engine.GET("/plan", fitnessController.FindPlanByUserId)
 	engine.POST("/chat/send", chatController.SendMessage)
 	engine.GET("/chat", chatController.GetMessages)
-	engine.GET("/test", userMiddleware.Test)
 
 	if err = engine.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatal(err)

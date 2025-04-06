@@ -35,14 +35,17 @@ func (fs *FitnessService) GetPlanByUserId(user *models.User) (*dto.WeekPlan, err
 	return weekPlan, nil
 }
 
-func (fs *FitnessService) GeneratePlanByUser(user *models.User) (*dto.WeekPlan, error) {
+func (fs *FitnessService) GeneratePlanByUser(user *models.User, comment string) (*dto.WeekPlan, error) {
 	query := utils.GenerateQueryByUserData(user)
 	contextPrompt := ""
 	equipments, err := fs.exerciseService.GetExerciseArray(user.Target, user.Inventory)
 	if err == nil {
 		contextPrompt = "Контекст упражнений: " + strings.Join(equipments, ", ")
 	}
-	weekPlan, err := fs.GeneratePlan(contextPrompt + "\n " + query)
+	if comment != "" {
+		comment = "Дополнительный комментарий: " + comment
+	}
+	weekPlan, err := fs.GeneratePlan(contextPrompt + "\n " + query + "\n " + comment)
 	if err != nil {
 		return nil, err
 	}
