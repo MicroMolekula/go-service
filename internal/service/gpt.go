@@ -43,7 +43,7 @@ func (s *GptService) Query(systemPrompt string, userPrompt string) (*dto.GptResu
 	req, err := s.gptClient.NewRequest(
 		s.cfg.YandexGPT.ApiToken,
 		s.cfg.YandexGPT.CatalogToken,
-		0.1,
+		0.4,
 		3000,
 		systemPrompt,
 		userPrompt,
