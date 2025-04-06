@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/MicroMolekula/gpt-service/internal/client"
 	"github.com/MicroMolekula/gpt-service/internal/models"
 	"github.com/MicroMolekula/gpt-service/internal/repository"
 	"github.com/gin-gonic/gin"
@@ -46,4 +47,16 @@ func (m *UserMiddleware) Middleware() gin.HandlerFunc {
 func (m *UserMiddleware) Profile(ctx *gin.Context) {
 	user := ctx.MustGet("user").(*models.User)
 	ctx.JSON(http.StatusOK, user)
+}
+
+func (m *UserMiddleware) Test(ctx *gin.Context) {
+	exerciseClient := client.NewExerciseClient("http://gateway:8000/symfony/exercises/search")
+	equipments, err := exerciseClient.Query("fit", "gym")
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, equipments)
 }

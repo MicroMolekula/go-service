@@ -30,7 +30,8 @@ func main() {
 	messageRepository := repository.NewMessageRepository(db)
 	gptService := service.NewGptService(cfg)
 	gptController := controller.NewGPTController(gptService)
-	fitnessService := service.NewFitnessService(gptService, cfg, userPlanRepository)
+	exerciseService := service.NewExerciseService(cfg)
+	fitnessService := service.NewFitnessService(gptService, cfg, userPlanRepository, exerciseService)
 	chatService := service.NewChatService(gptService, messageRepository, cfg)
 	fitnessController := controller.NewFitnessController(fitnessService)
 	chatController := controller.NewChatController(chatService)
@@ -43,6 +44,7 @@ func main() {
 	engine.GET("/plan", fitnessController.FindPlanByUserId)
 	engine.POST("/chat/send", chatController.SendMessage)
 	engine.GET("/chat", chatController.GetMessages)
+	engine.GET("/test", userMiddleware.Test)
 
 	if err = engine.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatal(err)

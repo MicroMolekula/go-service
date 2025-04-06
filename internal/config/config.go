@@ -14,6 +14,7 @@ type Config struct {
 	YandexGPT     `yaml:"yandex_gpt"`
 	Prompts       `yaml:"prompts"`
 	Mongo         `yaml:"mongo"`
+	ExerciseUrl   string `yaml:"exercise_url"`
 }
 
 type Server struct {

@@ -16,10 +16,11 @@ type FitnessService struct {
 	cfg                *config.Config
 	gptService         *GptService
 	userPlanRepository *repository.UserPlanRepository
+	exerciseService    *ExerciseService
 }
 
-func NewFitnessService(gptService *GptService, cfg *config.Config, userPlanRepository *repository.UserPlanRepository) *FitnessService {
-	return &FitnessService{gptService: gptService, cfg: cfg, userPlanRepository: userPlanRepository}
+func NewFitnessService(gptService *GptService, cfg *config.Config, userPlanRepository *repository.UserPlanRepository, exerciseService *ExerciseService) *FitnessService {
+	return &FitnessService{gptService: gptService, cfg: cfg, userPlanRepository: userPlanRepository, exerciseService: exerciseService}
 }
 
 func (fs *FitnessService) GetPlanByUserId(user *models.User) (*dto.WeekPlan, error) {
@@ -36,7 +37,12 @@ func (fs *FitnessService) GetPlanByUserId(user *models.User) (*dto.WeekPlan, err
 
 func (fs *FitnessService) GeneratePlanByUser(user *models.User) (*dto.WeekPlan, error) {
 	query := utils.GenerateQueryByUserData(user)
-	weekPlan, err := fs.GeneratePlan(query)
+	contextPrompt := ""
+	equipments, err := fs.exerciseService.GetExerciseArray(user.Target, user.Inventory)
+	if err == nil {
+		contextPrompt = "Контекст упражнений: " + strings.Join(equipments, ", ")
+	}
+	weekPlan, err := fs.GeneratePlan(contextPrompt + "\n " + query)
 	if err != nil {
 		return nil, err
 	}
