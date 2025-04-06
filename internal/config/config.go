@@ -38,6 +38,7 @@ type YandexGPT struct {
 
 type Prompts struct {
 	Plans string `yaml:"plans"`
+	Chat  string `yaml:"chat"`
 }
 
 type Mongo struct {

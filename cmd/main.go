@@ -31,7 +31,7 @@ func main() {
 	gptService := service.NewGptService(cfg)
 	gptController := controller.NewGPTController(gptService)
 	fitnessService := service.NewFitnessService(gptService, cfg, userPlanRepository)
-	chatService := service.NewChatService(gptService, messageRepository)
+	chatService := service.NewChatService(gptService, messageRepository, cfg)
 	fitnessController := controller.NewFitnessController(fitnessService)
 	chatController := controller.NewChatController(chatService)
 	userMiddleware := controller.NewUserMiddleware(userRepository)

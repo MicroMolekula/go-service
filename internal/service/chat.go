@@ -1,18 +1,20 @@
 package service
 
 import (
+	"github.com/MicroMolekula/gpt-service/internal/config"
 	"github.com/MicroMolekula/gpt-service/internal/models"
 	"github.com/MicroMolekula/gpt-service/internal/repository"
 	"time"
 )
 
 type ChatService struct {
+	cfg               *config.Config
 	messageRepository *repository.MessageRepository
 	gptService        *GptService
 }
 
-func NewChatService(gptService *GptService, messageRepository *repository.MessageRepository) *ChatService {
-	return &ChatService{gptService: gptService, messageRepository: messageRepository}
+func NewChatService(gptService *GptService, messageRepository *repository.MessageRepository, cfg *config.Config) *ChatService {
+	return &ChatService{gptService: gptService, messageRepository: messageRepository, cfg: cfg}
 }
 
 func (s *ChatService) SendMessage(message string, user *models.User) (*models.Message, error) {
@@ -22,7 +24,7 @@ func (s *ChatService) SendMessage(message string, user *models.User) (*models.Me
 		Type:    false,
 		Context: message,
 	}
-	gptResp, err := s.gptService.QueryLite("Ты фитнес-тренер, способный помочь пользователю в вопросах по фитнесу. Общайся кратко и на простом языке. Отвечай только по теме фитнеса и спорта.", message)
+	gptResp, err := s.gptService.QueryLite(s.cfg.Prompts.Chat, message)
 	if err != nil {
 		return nil, err
 	}
